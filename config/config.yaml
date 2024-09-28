@@ -1,0 +1,26 @@
+http:
+    port: 8082
+
+api:
+    logs_storage:
+        host: "localhost"
+        port: 8081
+
+auth:
+    username: "admin"
+    password: "admin"
+
+## logger
+logger:
+    level: DEBUG
+    to_file: true
+    to_stderr: true
+    fn: "logsViewer.log"
+    max_size_mb: 100
+    max_files: 10
+
+
+
+
+    
+
