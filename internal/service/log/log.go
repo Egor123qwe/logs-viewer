@@ -5,15 +5,15 @@ import (
 
 	proto "github.com/Egor123qwe/logs-storage/pkg/proto"
 	"github.com/Egor123qwe/logs-viewer/api"
-	"github.com/Egor123qwe/logs-viewer/internal/model"
+	"github.com/Egor123qwe/logs-viewer/internal/model/log"
 	"github.com/Egor123qwe/logs-viewer/internal/util"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type Service interface {
-	GetLogs(ctx context.Context, req model.LogFilter) (model.LogResp, error)
+	GetLogs(ctx context.Context, req log.LogFilter) (log.LogResp, error)
 
-	GetModules(ctx context.Context, req model.ModuleReq) ([]string, error)
+	GetModules(ctx context.Context, req log.ModuleReq) ([]string, error)
 	InitModule(ctx context.Context, module string) (int64, error)
 }
 
@@ -27,7 +27,7 @@ func New(api api.Service) Service {
 	}
 }
 
-func (s service) GetLogs(ctx context.Context, req model.LogFilter) (model.LogResp, error) {
+func (s service) GetLogs(ctx context.Context, req log.LogFilter) (log.LogResp, error) {
 	apiReq := &proto.LogFilter{
 		TraceID:     req.TraceID,
 		ModuleID:    req.ModuleID,
@@ -50,15 +50,15 @@ func (s service) GetLogs(ctx context.Context, req model.LogFilter) (model.LogRes
 
 	resp, err := s.api.Log().GetLogs(ctx, apiReq)
 	if err != nil {
-		return model.LogResp{}, err
+		return log.LogResp{}, err
 	}
 
-	result := model.LogResp{
+	result := log.LogResp{
 		Total: resp.PagesCount,
 	}
 
 	for _, l := range resp.Logs {
-		log := model.Log{
+		log := log.Log{
 			ID:      l.Id,
 			TraceID: l.TraceID,
 			Module:  l.Module,

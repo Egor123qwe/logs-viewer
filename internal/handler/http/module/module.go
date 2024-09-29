@@ -5,16 +5,16 @@ import (
 
 	"github.com/Egor123qwe/logs-viewer/internal/handler/model"
 	"github.com/Egor123qwe/logs-viewer/internal/handler/model/module"
-	srvmodel "github.com/Egor123qwe/logs-viewer/internal/model"
-	"github.com/Egor123qwe/logs-viewer/internal/service"
+	srvmodel "github.com/Egor123qwe/logs-viewer/internal/model/log"
+	modulesrv "github.com/Egor123qwe/logs-viewer/internal/service/log"
 	"github.com/gin-gonic/gin"
 )
 
 type Handler struct {
-	srv service.Service
+	srv modulesrv.Service
 }
 
-func New(service service.Service) Handler {
+func New(service modulesrv.Service) Handler {
 	return Handler{
 		srv: service,
 	}
@@ -28,7 +28,7 @@ func (h Handler) Init(router *gin.RouterGroup) {
 func (h Handler) getModules(c *gin.Context) {
 	filter := c.Query("filter")
 
-	modules, err := h.srv.Logs().GetModules(c, srvmodel.ModuleReq{NameFilter: filter})
+	modules, err := h.srv.GetModules(c, srvmodel.ModuleReq{NameFilter: filter})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, model.ErrorResp{Error: err.Error()})
 		return
@@ -41,11 +41,11 @@ func (h Handler) initModule(c *gin.Context) {
 	name := c.Query("module")
 
 	if name == "" {
-		c.JSON(http.StatusBadRequest, model.ErrorResp{Error: model.EmptyModuleName.Error()})
+		c.JSON(http.StatusBadRequest, model.ErrorResp{Error: model.EmptyModuleNameErr.Error()})
 		return
 	}
 
-	id, err := h.srv.Logs().InitModule(c, name)
+	id, err := h.srv.InitModule(c, name)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, model.ErrorResp{Error: err.Error()})
 		return

@@ -5,8 +5,5 @@ import (
 )
 
 var (
-	ErrInvalidContent  = errors.New("invalid content")
-	ErrInvalidLogLevel = errors.New("invalid log level")
-
-	ErrFailedToAddLogs = errors.New("failed to add logs")
+	InvalidCredentialsErr = errors.New("invalid username or password")
 )

@@ -11,21 +11,21 @@ import (
 )
 
 type handler struct {
-	auth auth.Service
+	auth auth.Handler
 }
 
 func New(srv service.Service) http.Handler {
 	router := gin.Default()
 
 	h := &handler{
-		auth: auth.New(router.Group("/auth")),
+		auth: auth.New(router.Group("/auth"), srv.Auth()),
 	}
 
 	api := router.Group("/api")
 	api.Use(h.auth.Auth)
 
-	log.New(srv).Init(api.Group("/log"))
-	module.New(srv).Init(api.Group("/module"))
+	log.New(srv.Logs()).Init(api.Group("/log"))
+	module.New(srv.Logs()).Init(api.Group("/module"))
 
 	return router
 }

@@ -7,7 +7,6 @@ http:
         - http://localhost:3000
         - http://localhost:58271
 
-
 api:
     logs_storage:
         host: "localhost"
