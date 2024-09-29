@@ -7,6 +7,7 @@ import (
 	"github.com/Egor123qwe/logs-viewer/internal/handler/model/auth"
 	srvmodel "github.com/Egor123qwe/logs-viewer/internal/model/auth"
 	authsrv "github.com/Egor123qwe/logs-viewer/internal/service/auth"
+	"github.com/dchest/uniuri"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/sessions"
 )
@@ -30,7 +31,7 @@ type handler struct {
 func New(router *gin.RouterGroup, srv authsrv.Service) Handler {
 	h := &handler{
 		srv:   srv,
-		store: sessions.NewCookieStore([]byte("secret")),
+		store: sessions.NewCookieStore([]byte(uniuri.NewLen(32))),
 	}
 
 	router.POST("/login", h.Login)
