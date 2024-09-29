@@ -1,5 +1,12 @@
 http:
     port: 8082
+    shutdown_time: 5s
+    read_time: 10s
+
+    allowed_origins:
+        - http://localhost:3000
+        - http://localhost:58271
+
 
 api:
     logs_storage:

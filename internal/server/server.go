@@ -5,7 +5,9 @@ import (
 	"context"
 	"sync"
 
+	"github.com/Egor123qwe/logs-viewer/internal/handler"
 	"github.com/Egor123qwe/logs-viewer/internal/server/launcher"
+	"github.com/Egor123qwe/logs-viewer/internal/server/launcher/http"
 	"github.com/Egor123qwe/logs-viewer/internal/service"
 	"github.com/op/go-logging"
 	"golang.org/x/sync/errgroup"
@@ -18,10 +20,12 @@ type server struct {
 }
 
 func New(srv service.Service) (launcher.Server, error) {
-	//h := handler.New(srv)
+	h := handler.New(srv)
 
 	result := &server{
-		servers: []launcher.Server{},
+		servers: []launcher.Server{
+			http.New(h.HTTP, http.NewConfig()),
+		},
 	}
 
 	return result, nil
