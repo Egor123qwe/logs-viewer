@@ -6,6 +6,8 @@ import (
 	proto "github.com/Egor123qwe/logs-storage/pkg/proto"
 	"github.com/Egor123qwe/logs-viewer/api"
 	"github.com/Egor123qwe/logs-viewer/internal/model"
+	"github.com/Egor123qwe/logs-viewer/internal/util"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 type Service interface {
@@ -26,7 +28,25 @@ func New(api api.Service) Service {
 }
 
 func (s service) GetLogs(ctx context.Context, req model.LogFilter) (model.LogResp, error) {
-	apiReq := &proto.LogFilter{}
+	apiReq := &proto.LogFilter{
+		TraceID:     req.TraceID,
+		ModuleID:    req.ModuleID,
+		Message:     req.Message,
+		CountOnPage: req.CountOnPage,
+		Page:        req.Page,
+	}
+
+	if req.Level != nil {
+		apiReq.Level = util.Ptr((*req.Level).String())
+	}
+
+	if req.StartTime != nil {
+		apiReq.StartTime = timestamppb.New(*req.StartTime)
+	}
+
+	if req.EndTime != nil {
+		apiReq.EndTime = timestamppb.New(*req.EndTime)
+	}
 
 	resp, err := s.api.Log().GetLogs(ctx, apiReq)
 	if err != nil {
